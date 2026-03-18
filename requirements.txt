@@ -1,0 +1,5 @@
+# Event-driven backtesting engine — runtime & dev dependencies
+numpy>=1.26
+pandas>=2.2
+matplotlib>=3.8
+pytest>=8.0
