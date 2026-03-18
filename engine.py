@@ -1,9 +1,4 @@
-"""
-Main event loop for the backtesting engine.
 
-Wires the data handler, strategy, portfolio, and simulated execution
-together and drains the central queue until historical data is exhausted.
-"""
 
 from __future__ import annotations
 
@@ -21,14 +16,7 @@ from strategy import BuyAndHoldStrategy
 
 
 def run_backtest() -> None:
-    """
-    Run a minimal end-to-end backtest with dummy parameters.
-
-    Instantiates :class:`HistoricCSVDataHandler`, :class:`BuyAndHoldStrategy`,
-    :class:`Portfolio`, and :class:`SimulatedExecutionHandler`, then loops:
-    advance bars, drain and route all queued events until the CSV stream
-    ends. Prints routing activity and final total equity.
-    """
+   
     events_queue: Queue = Queue()
 
     csv_dir = "data"
