@@ -1,6 +1,4 @@
-"""
-Unit tests for SimulatedExecutionHandler.
-"""
+
 
 from __future__ import annotations
 
@@ -16,10 +14,7 @@ from market_stubs import _Bar, _DummyBars
 
 
 def test_execute_order_enqueues_fill_at_latest_close() -> None:
-    """
-    A market BUY order should produce one FillEvent at slippage-adjusted price.
-    Default slippage is 5 bps: 150 * 1.0005 * 100.
-    """
+  
     bar_time = datetime(2020, 6, 15, 16, 0, 0)
     bars = _DummyBars(symbol_list=["AAPL"])
     bars.latest_symbol_data["AAPL"].append(_Bar(timestamp=bar_time, close=150.0))
@@ -48,9 +43,7 @@ def test_execute_order_enqueues_fill_at_latest_close() -> None:
 
 
 def test_execution_applies_slippage() -> None:
-    """
-    BUY pays above mid; SELL receives below mid when slippage_pct is set.
-    """
+ 
     bar_time = datetime(2020, 6, 15, 16, 0, 0)
     bars = _DummyBars(symbol_list=["AAPL"])
     bars.latest_symbol_data["AAPL"].append(_Bar(timestamp=bar_time, close=100.0))
