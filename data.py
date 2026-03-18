@@ -1,10 +1,4 @@
-"""
-Data handling abstractions for the backtesting engine.
 
-This module provides the :class:`DataHandler` abstract base class and a
-simple CSV-backed historical implementation suitable for event-driven
-backtests that strictly avoid look-ahead bias.
-"""
 
 from __future__ import annotations
 
@@ -22,58 +16,15 @@ from events import MarketEvent
 
 
 class DataHandler(metaclass=ABCMeta):
-    """
-    Abstract base class for all data handlers.
-
-    Concrete implementations are responsible for providing a stream of
-    market data bars to the backtesting engine and for signaling the
-    arrival of new data via :class:`~events.MarketEvent` instances.
-    """
+    
 
     @abstractmethod
     def update_bars(self) -> None:
-        """
-        Advance the data handler to the next bar.
-
-        Implementations must:
-
-        - Update any internal state that stores the *latest* bar(s).
-        - Place a :class:`MarketEvent` instance onto the central
-          event queue to signal that new data is available.
-
-        The method must *not* expose future data, thereby preventing
-        look-ahead bias. Only the current bar and any historical bars
-        encountered up to this point may be accessible.
-        """
-
+       
 
 @dataclass
 class HistoricCSVDataHandler(DataHandler):
-    """
-    Historic data handler that reads bar data from CSV files.
 
-    Parameters
-    ----------
-    events_queue:
-        The central event queue used by the backtesting engine.
-    csv_dir:
-        Directory containing one CSV file per symbol.
-    symbol_list:
-        List of symbol tickers corresponding to CSV filenames
-        (e.g. a symbol ``'AAPL'`` expects ``AAPL.csv`` in ``csv_dir``).
-
-    Notes
-    -----
-    - Each CSV file must contain a date or datetime index column that
-      can be parsed by :func:`pandas.read_csv` with ``parse_dates``.
-    - Data is converted to a per-symbol generator that yields one row
-      at a time. The handler steps all symbols forward in lockstep
-      according to their chronological order.
-    - The design ensures that at any time only the current and
-      historical bars are accessible; future rows are never loaded
-      into the latest-bar store before their corresponding
-      :meth:`update_bars` call.
-    """
 
     events_queue: Queue
     csv_dir: str
@@ -102,7 +53,6 @@ class HistoricCSVDataHandler(DataHandler):
             df.sort_index(inplace=True)
 
             self._symbol_data[symbol] = self._row_generator(df)
-    #decorator -> tells python this func doesn't need to look at self to do its job 
     @staticmethod
     def _row_generator(df: pd.DataFrame) -> Generator[pd.Series, None, None]:
        
