@@ -1,4 +1,3 @@
-"""Pytest configuration: allow imports from the tests directory."""
 
 from __future__ import annotations
 
