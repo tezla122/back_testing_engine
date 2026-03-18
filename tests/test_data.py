@@ -1,6 +1,4 @@
-"""
-Unit tests for the historical CSV data handler.
-"""
+
 
 from __future__ import annotations
 
@@ -18,10 +16,7 @@ from events import MarketEvent
 
 
 def _create_mock_csv(tmp_path: Path, symbol: str, dates: list[str]) -> None:
-    """
-    Create a simple OHLCV-style CSV file for testing.
-    """
-
+    
     data = {
         "open": [1.0 * (i + 1) for i in range(len(dates))],
         "high": [1.1 * (i + 1) for i in range(len(dates))],
@@ -35,18 +30,12 @@ def _create_mock_csv(tmp_path: Path, symbol: str, dates: list[str]) -> None:
 
 
 def test_update_bars_pulls_data_chronologically(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """
-    Ensure that ``update_bars`` advances through the CSV in
-    chronological order, strictly one row at a time.
-    """
-
     symbol = "TEST"
     dates = ["2020-01-01", "2020-01-02", "2020-01-03"]
     _create_mock_csv(tmp_path, symbol, dates)
 
     events = Queue()
 
-    # Instantiate handler pointing at the temporary CSV directory
     handler = HistoricCSVDataHandler(events_queue=events, csv_dir=str(tmp_path), symbol_list=[symbol])
 
     observed_dates: list[pd.Timestamp] = []
@@ -60,11 +49,6 @@ def test_update_bars_pulls_data_chronologically(tmp_path: Path, monkeypatch: pyt
 
 
 def test_market_event_emitted_on_update(tmp_path: Path) -> None:
-    """
-    Verify that a :class:`MarketEvent` is enqueued after
-    ``update_bars`` is called.
-    """
-
     symbol = "TEST"
     dates = ["2020-01-01", "2020-01-02"]
     _create_mock_csv(tmp_path, symbol, dates)
@@ -79,11 +63,6 @@ def test_market_event_emitted_on_update(tmp_path: Path) -> None:
 
 
 def test_update_bars_raises_when_data_exhausted(tmp_path: Path) -> None:
-    """
-    Confirm that ``update_bars`` raises ``StopIteration`` when no
-    additional data is available and prevents further advancement.
-    """
-
     symbol = "TEST"
     dates = ["2020-01-01"]
     _create_mock_csv(tmp_path, symbol, dates)
@@ -91,10 +70,8 @@ def test_update_bars_raises_when_data_exhausted(tmp_path: Path) -> None:
     events = Queue()
     handler = HistoricCSVDataHandler(events_queue=events, csv_dir=str(tmp_path), symbol_list=[symbol])
 
-    # First call should succeed
     handler.update_bars()
 
-    # Second call should raise StopIteration
     with pytest.raises(StopIteration):
         handler.update_bars()
 
