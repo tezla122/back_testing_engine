@@ -1,6 +1,4 @@
-"""
-Unit tests for the Portfolio class.
-"""
+
 
 from __future__ import annotations
 
@@ -16,9 +14,7 @@ from market_stubs import _Bar, _DummyBars
 
 
 def test_portfolio_initialisation_sets_cash_and_total() -> None:
-    """
-    Verify that the portfolio starts with the correct cash and equity.
-    """
+   
 
     start_date = datetime(2020, 1, 1)
     events = Queue()
@@ -38,9 +34,7 @@ def test_portfolio_initialisation_sets_cash_and_total() -> None:
 
 
 def test_update_signal_enqueues_long_order() -> None:
-    """
-    A LONG signal should create a single market BUY order for 100 units.
-    """
+  
 
     start_date = datetime(2020, 1, 1)
     events: Queue[OrderEvent] = Queue()
@@ -70,9 +64,7 @@ def test_update_signal_enqueues_long_order() -> None:
 
 
 def test_update_fill_updates_positions_and_cash() -> None:
-    """
-    A BUY fill should update positions and reduce cash by cost+commission.
-    """
+  
 
     start_date = datetime(2020, 1, 1)
     events = Queue()
@@ -105,10 +97,7 @@ def test_update_fill_updates_positions_and_cash() -> None:
 
 
 def test_update_timeindex_revalues_positions() -> None:
-    """
-    Ensure that update_timeindex uses the latest close prices to value positions.
-    """
-
+ 
     start_date = datetime(2020, 1, 1)
     events = Queue()
     bars = _DummyBars(symbol_list=["AAPL"])
@@ -120,7 +109,6 @@ def test_update_timeindex_revalues_positions() -> None:
         initial_capital=10_000.0,
     )
 
-    # Simulate owning 10 shares and a new market bar at 100.0.
     portfolio.current_positions["AAPL"] = 10
     bar_time = datetime(2020, 1, 2)
     bars.latest_symbol_data["AAPL"].append(_Bar(timestamp=bar_time, close=100.0))
@@ -128,15 +116,12 @@ def test_update_timeindex_revalues_positions() -> None:
     market_event = MarketEvent()
     portfolio.update_timeindex(market_event)
 
-    # 10 * 100 = 1,000 market value plus 10,000 cash.
     assert portfolio.current_holdings["AAPL"] == pytest.approx(1_000.0)
     assert portfolio.current_holdings["total"] == pytest.approx(11_000.0)
 
 
 def test_portfolio_handles_short_and_exit() -> None:
-    """
-    SHORT emits SELL; EXIT on a short position emits BUY to cover.
-    """
+   
     start_date = datetime(2020, 1, 1)
     events: Queue[OrderEvent] = Queue()
     bars = _DummyBars(symbol_list=["AAPL"])
