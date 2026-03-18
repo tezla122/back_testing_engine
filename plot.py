@@ -1,6 +1,3 @@
-"""
-Visualization helpers for backtest equity and drawdown analysis.
-"""
 
 from __future__ import annotations
 
@@ -11,23 +8,7 @@ from performance import create_drawdowns
 
 
 def plot_performance(equity_curve_df: pd.DataFrame) -> None:
-    """
-    Plot portfolio equity and underwater drawdown in two stacked panels.
-
-    Uses :func:`performance.create_drawdowns` on the ``total`` equity
-    series. Drawdowns are shown as percentages (negative = below peak).
-
-    Parameters
-    ----------
-    equity_curve_df:
-        DataFrame with a DatetimeIndex (or parseable dates on the index)
-        and a ``total`` column for portfolio value.
-
-    Notes
-    -----
-    Displays the figure via :func:`matplotlib.pyplot.show`. For empty
-    or invalid input, the function returns without drawing.
-    """
+   
     if equity_curve_df is None or equity_curve_df.empty:
         return
     if "total" not in equity_curve_df.columns:
